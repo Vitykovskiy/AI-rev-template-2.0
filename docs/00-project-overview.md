@@ -32,10 +32,20 @@ If you need to diagnose execution friction, consult `docs/12-observability.md` f
 - Workflow state file: `.ai-dev-template.workflow-state.json`
 - Current stage: `issue_driven`
 - Session mode: `dialogue` by default; execution activates on an explicit execution command
-- Active initiative: `#3 [Initiative] Seed first delivery stream`
-- Active execution issues: `#3` in `In Progress`; `#4` is the next `Ready` issue
+- Current repository role: active orchestration template for the work happening in this repository
+- Current product being designed: a separate new strict agent-first specification-driven template
+- Current design continuation point: `docs/14-process-design-status.md`
+- Accepted design baseline: `docs/13-agent-first-sdd-decisions.md`
+- Active initiative: initial seed initiative completed; current product work is the specification of the separate new template
+- Active execution issues: `#4` is the current open `business_analysis` issue; any later routing must re-read GitHub before acting
 - Current owner role: `business-analyst`
 - Delivery status: `setup complete; GitHub-backed issue/project workflow initialized`
+
+## Layer Separation
+
+- The current template governs how agents operate in this repository right now.
+- The future template is the product being analyzed and specified through the current template.
+- Documents about the future template do not change the active workflow of the current template unless the repository explicitly adopts those changes into the canonical workflow.
 
 ## Canonical Artifact Map
 
@@ -68,6 +78,8 @@ If you need to diagnose execution friction, consult `docs/12-observability.md` f
 - `docs/09-integrations.md`
 - `docs/11-workflow-configuration.md`
 - `docs/12-observability.md`
+- `docs/13-agent-first-sdd-decisions.md`
+- `docs/14-process-design-status.md`
 
 ## Reading Policy
 

@@ -2,6 +2,21 @@
 
 Read this file first at the start of every new session.
 
+## User Dialogue Rules
+
+These dialogue rules have the highest priority for user-facing communication in this repository.
+
+Apply them in every session unless the user explicitly overrides a specific point.
+
+- Use sequential dialogue: ask or address one substantive question or decision at a time instead of unloading a long questionnaire.
+- Use correct professional terminology. Do not replace precise concepts with бытовые or vague wording when an exact term exists.
+- When a term may be ambiguous, give a brief clarification the first time you use it in the current context.
+- Minimize unnecessary anglicisms. Prefer precise Russian professional language and use English terms only when they are standard and materially clearer.
+- Treat improvement of the user's understanding as part of the task. Do not merely mirror the user's wording if it weakens precision.
+- Be critical instead of agreeable by default. If the user's proposal has a weak point, terminology error, architecture risk, or methodological flaw, state it directly and explain why.
+- Keep the tone respectful but not servile. Do not soften away important criticism just to preserve comfort.
+- Prefer strong engineering practice over habit. If the user's habit conflicts with a stronger practice, say so and propose the better alternative.
+
 ## Agent Modes
 
 ### Dialogue session (default)
@@ -56,6 +71,28 @@ Setup must not transition to `issue_driven` until the repository has a seeded st
 - `docs/07-workflow.md` is the canonical workflow policy.
 - `docs/11-workflow-configuration.md` explains which workflow parts are fixed and which are configurable.
 - `README.md` is a human overview, not the canonical workflow policy.
+- `docs/13-agent-first-sdd-decisions.md` is the current baseline of accepted design decisions for the new agent-first specification-driven workflow.
+- `docs/14-process-design-status.md` tells a new agent what the current design step is and where to continue.
+
+## Current Repository Design Context
+
+This repository is not redesigning its active workflow in place.
+
+This repository currently serves as the orchestration environment for designing and specifying a separate new template.
+
+Keep these two layers separate:
+
+- the current template: the active orchestrator that runs this repository and is still governed by `AGENTS.md`, `.ai-dev-template.workflow-state.json`, and the current canonical workflow documents;
+- the new template: the product being designed through repository artifacts such as `docs/13-agent-first-sdd-decisions.md` and `docs/14-process-design-status.md`.
+
+When the user discusses the future template, do not reinterpret that work as an instruction to modify the active workflow of the current template unless the user explicitly asks to change the current orchestrator rules.
+
+When a new session is about continuing that design work, read these files after `.ai-dev-template.workflow-state.json`:
+
+1. `docs/14-process-design-status.md`
+2. `docs/13-agent-first-sdd-decisions.md`
+
+Do not restart the design from scratch when these files already contain the accepted baseline and current open questions.
 
 ## Bootstrap State Detection
 
@@ -346,4 +383,3 @@ In `workflow.execution_mode = "autonomous"`, report a global stop only when:
 - the orchestrator has re-read the latest GitHub Issue and Project state after the most recent task completion, blocker update, or subagent retry decision and still finds no eligible path.
 
 When blocked by missing specifications, contracts, decomposition details, or UX behavior, stop implementation, mark the implementation task `Blocked`, and create or request a linked `system_analysis` follow-up issue before any coding continues.
-
