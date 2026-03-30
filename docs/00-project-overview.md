@@ -30,12 +30,12 @@ If you need to diagnose execution friction, consult `docs/12-observability.md` f
 ## Current Status
 
 - Workflow state file: `.ai-dev-template.workflow-state.json`
-- Current stage: `<setup|issue_driven>`
-- Session mode: `<dialogue|execution>`
-- Active initiative: `<fill-initiative>`
-- Active execution issues: `<issue numbers currently in progress or none>`
-- Current owner role: `<fill-role>`
-- Delivery status: `<fill-status>`
+- Current stage: `issue_driven`
+- Session mode: `dialogue` by default; execution activates on an explicit execution command
+- Active initiative: `#3 [Initiative] Seed first delivery stream`
+- Active execution issues: `#3` in `In Progress`; `#4` is the next `Ready` issue
+- Current owner role: `business-analyst`
+- Delivery status: `setup complete; GitHub-backed issue/project workflow initialized`
 
 ## Canonical Artifact Map
 
