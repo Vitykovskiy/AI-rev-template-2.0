@@ -1,15 +1,16 @@
-name: Implementation - Backend
-description: Implement one backend endpoint or isolated service unit.
-title: "[Backend] "
+name: Implementation - QA E2E
+description: Implement one contour-owned QA or test-asset change inside a block delivery task.
+title: "[QA E2E] "
 labels:
   - "task_type: implementation"
-  - "contour: backend"
+  - "contour: qa-e2e"
 body:
   - type: markdown
     attributes:
       value: |
-        Backend implementation task.
-        The `task_type` is fixed as `implementation`, contour as `backend`.
+        QA E2E implementation task.
+        Use this when a delivery block needs contour-owned test assets, fixtures, scripts, or validation automation before the separate `e2e` validation task runs.
+        The `task_type` is fixed as `implementation`, contour as `qa-e2e`.
   - type: dropdown
     id: model
     attributes:
@@ -36,26 +37,26 @@ body:
     validations:
       required: true
   - type: textarea
-    id: api_contract
+    id: validation_asset
     attributes:
-      label: api_contract
-      description: "API contract - endpoint, request schema, response schema."
-      placeholder: "POST /api/orders - request: { item_id, quantity } - response: { order_id, status }"
+      label: validation_asset
+      description: Which test asset or validation automation does this task create or update?
+      placeholder: Playwright spec, test fixture, mock data, validation script, smoke checklist
     validations:
       required: true
   - type: textarea
-    id: business_logic
+    id: target_flow
     attributes:
-      label: business_logic
-      description: Business rules and constraints this task must implement.
-      placeholder: Describe invariants, validations, and side effects.
+      label: target_flow
+      description: Which user flow or acceptance boundary does this asset support?
+      placeholder: Describe the flow, acceptance slice, or block-level validation boundary.
     validations:
       required: true
   - type: textarea
     id: canonical_inputs
     attributes:
       label: canonical_inputs
-      placeholder: docs/analysis/domain-model.md, docs/analysis/integration-contracts.md
+      placeholder: docs/analysis/user-scenarios.md, docs/analysis/version-scope-and-acceptance.md, linked block_delivery issue
     validations:
       required: true
   - type: textarea
@@ -71,8 +72,8 @@ body:
       label: definition_of_ready
       description: All items must be checked before the task moves to Ready.
       value: |
-        - [ ] api_contract is filled (endpoint, request schema, response schema)
-        - [ ] business_logic is described
+        - [ ] validation_asset is described
+        - [ ] target_flow is specified
         - [ ] all dependent tasks are closed
     validations:
       required: true
@@ -82,9 +83,9 @@ body:
       label: definition_of_done
       description: All items must be checked before the task can be closed.
       value: |
-        - [ ] endpoint behavior matches api_contract
-        - [ ] business logic rules are enforced and covered by tests
-        - [ ] error paths are handled explicitly
+        - [ ] the contour-owned QA asset is implemented and verified
+        - [ ] validation inputs and assumptions are documented
+        - [ ] downstream block-level testing can start without guessing
         - [ ] code committed and pushed
     validations:
       required: true
