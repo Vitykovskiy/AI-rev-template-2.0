@@ -1,15 +1,16 @@
-name: Implementation - Backend
-description: Implement one backend endpoint or isolated service unit.
-title: "[Backend] "
+name: Implementation - DevOps
+description: Implement one contour-owned DevOps change inside a block delivery task.
+title: "[DevOps] "
 labels:
   - "task_type: implementation"
-  - "contour: backend"
+  - "contour: devops"
 body:
   - type: markdown
     attributes:
       value: |
-        Backend implementation task.
-        The `task_type` is fixed as `implementation`, contour as `backend`.
+        DevOps implementation task.
+        Use this when a delivery block needs a contour-owned automation, environment, or release-engineering change that is narrower than the standalone `infrastructure` or `deploy` task types.
+        The `task_type` is fixed as `implementation`, contour as `devops`.
   - type: dropdown
     id: model
     attributes:
@@ -36,26 +37,26 @@ body:
     validations:
       required: true
   - type: textarea
-    id: api_contract
+    id: delivery_change
     attributes:
-      label: api_contract
-      description: "API contract - endpoint, request schema, response schema."
-      placeholder: "POST /api/orders - request: { item_id, quantity } - response: { order_id, status }"
+      label: delivery_change
+      description: Which bounded DevOps change does this task implement?
+      placeholder: Describe the workflow, environment, secrets, container, or automation change.
     validations:
       required: true
   - type: textarea
-    id: business_logic
+    id: target_surface
     attributes:
-      label: business_logic
-      description: Business rules and constraints this task must implement.
-      placeholder: Describe invariants, validations, and side effects.
+      label: target_surface
+      description: Which environment, workflow, or runtime surface is affected?
+      placeholder: staging workflow, deployment job, preview environment, runtime secret wiring
     validations:
       required: true
   - type: textarea
     id: canonical_inputs
     attributes:
       label: canonical_inputs
-      placeholder: docs/analysis/domain-model.md, docs/analysis/integration-contracts.md
+      placeholder: docs/09-integrations.md, docs/runbooks/deployment-runbook.md, linked block_delivery issue
     validations:
       required: true
   - type: textarea
@@ -71,8 +72,8 @@ body:
       label: definition_of_ready
       description: All items must be checked before the task moves to Ready.
       value: |
-        - [ ] api_contract is filled (endpoint, request schema, response schema)
-        - [ ] business_logic is described
+        - [ ] delivery_change is described
+        - [ ] target_surface is specified
         - [ ] all dependent tasks are closed
     validations:
       required: true
@@ -82,9 +83,9 @@ body:
       label: definition_of_done
       description: All items must be checked before the task can be closed.
       value: |
-        - [ ] endpoint behavior matches api_contract
-        - [ ] business logic rules are enforced and covered by tests
-        - [ ] error paths are handled explicitly
+        - [ ] the bounded DevOps change is implemented and verified
+        - [ ] any required workflow, environment, or runbook docs are updated
+        - [ ] downstream tasks can continue without guessing
         - [ ] code committed and pushed
     validations:
       required: true

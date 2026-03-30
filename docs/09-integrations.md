@@ -2,28 +2,28 @@
 
 ## GitHub Project
 
-- URL: `<paste GitHub Project URL here>`
-- Board type: `Kanban`
-- Required statuses present: `yes/no`
+- URL: `https://github.com/users/Vitykovskiy/projects/25`
+- Board type: `GitHub Project v2`
+- Required statuses present: `yes`
 - Required fields present: `Status`, `Task Type`, `Owner Contour`, `Priority`
-- Project item creation verified: `yes/no`
-- Setup validation status: `Unknown`
-- Notes: If `project_tracking = github_project`, prefer a repository-linked project for normal setup. If GitHub-side bootstrap is temporarily unavailable, record deferred reconciliation and continue local bootstrap instead of blocking the stage.
+- Project item creation verified: `yes`
+- Setup validation status: `Completed`
+- Notes: Repository-linked project `AI-rev-template-2.0 delivery` was created during setup and linked to `Vitykovskiy/AI-rev-template-2.0`. Required custom fields were created and the default `Status` field was updated to the workflow status vocabulary.
 
 ## GitHub Issues
 
-- Initiative issue creation verified: `yes/no`
-- Initial seeded `business_analysis` issue verified: `yes/no`
-- Operational issue templates verified: `yes/no`
-- Required task metadata captured by forms: `yes/no`
-- Ready -> In Progress claim/start flow verified: `yes/no`
-- Labels prepared for workflow use: `yes/no`
-- Notes: Record the identifiers or URLs needed to prove that workflow-required issue records exist.
+- Initiative issue creation verified: `yes`
+- Initial seeded `business_analysis` issue verified: `yes`
+- Operational issue templates verified: `yes`
+- Required task metadata captured by forms: `yes`
+- Ready -> In Progress claim/start flow verified: `yes`
+- Labels prepared for workflow use: `yes`
+- Notes: Seeded initiative `#3` is in `In Progress` and seeded `business_analysis` issue `#4` is in `Ready`. Duplicate bootstrap issues `#1` and `#2` were closed to preserve a single canonical starting backlog.
 
 ## Effective Workflow Policy
 
-- Effective `.ai-dev-template.config.json` committed and pushed: `yes/no`
-- Notes: If setup used a modified configuration file, record the commit or push evidence here.
+- Effective `.ai-dev-template.config.json` committed and pushed: `yes`
+- Notes: Effective setup policy comes from the committed repo-local config: `workflow.execution_mode = autonomous`, `project_tracking = github_project`, and `pull_requests.enabled = true`. Setup ran in normal GitHub-backed mode, not local-first fallback mode.
 
 ## Bootstrap Access Variables
 
@@ -52,7 +52,7 @@ These variables are produced or published by DevOps after Stage 0. They are not 
 
 | Secret | Where It Lives | Purpose | Stage first needed | Status |
 | --- | --- | --- | --- | --- |
-| `gh` auth token | GitHub CLI auth store | Issues and Project automation | `setup` | Unknown |
+| `gh` auth token | GitHub CLI auth store | Issues and Project automation | `setup` | Validated |
 
 ## GitHub Token Scope Baseline
 
@@ -79,12 +79,13 @@ Document every external system that matters to development, deploy, or e2e valid
 
 | Integration | Purpose | Stage first needed | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `<integration>` | `<purpose>` | `<setup/business_analysis/system_analysis/implementation/deploy/e2e>` | `<status>` | `<notes>` |
+| `GitHub Issues` | Canonical task records and dependency chain | `setup` | `Connected` | Seeded issues `#3` and `#4` created successfully. |
+| `GitHub Project v2` | Canonical delivery status board | `setup` | `Connected` | Project `25` is linked to the repository and contains the seeded starting backlog. |
 
 ## Integration Status
 
-- GitHub repository access: `Unknown`
-- GitHub Project access: `Unknown`
+- GitHub repository access: `Validated`
+- GitHub Project access: `Validated`
 - Deployment environment access: `Unknown`
 - E2E environment readiness: `Unknown`
 

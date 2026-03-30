@@ -2,6 +2,12 @@
 
 Use ADR-lite entries. Add new decisions to the top.
 
+## 2026-03-30 - Complete setup in GitHub-backed mode with a dedicated repository-linked project
+
+- Decision: Complete bootstrap using a dedicated repository-linked GitHub Project and seed exactly one open initiative plus one open initial business_analysis issue before switching to `issue_driven`.
+- Reason: The configured workflow requires GitHub Issues and GitHub Project to be the operational source of truth after setup, and this repository had no linked project or seeded backlog yet.
+- Consequences: The canonical starting backlog is `#3` plus `#4`, project status is tracked in project `25`, and later sessions should continue from the seeded issue chain instead of recreating bootstrap records.
+
 ## 2026-03-29 - Treat repo-local config as authoritative after template creation
 
 - Decision: A repository created from the template keeps its own committed `.ai-dev-template.config.json` as the workflow policy source of truth after setup.

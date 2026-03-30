@@ -1,5 +1,5 @@
 name: Infrastructure
-description: "Stage 0 — set up CI/CD, VPS, secrets, and environment variables before implementation begins."
+description: "Stage 0 - set up CI/CD, VPS, secrets, and environment variables before implementation begins."
 title: "[Infrastructure] "
 labels:
   - "task_type: infrastructure"
@@ -41,7 +41,7 @@ body:
     attributes:
       label: env_vars_and_secrets
       description: List all environment variables and secrets this task must provision.
-      placeholder: "DATABASE_URL → VPS env; API_KEY → GitHub Secrets"
+      placeholder: "DATABASE_URL -> VPS env; API_KEY -> GitHub Secrets"
     validations:
       required: true
   - type: textarea
