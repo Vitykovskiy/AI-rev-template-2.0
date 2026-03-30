@@ -80,9 +80,14 @@ The explicit separation of these roles is an accepted requirement for the new te
 
 - A delivery unit is not the same thing as a task.
 - A delivery unit is above task level.
+- A delivery unit is the smallest independently implementable and independently acceptable change package.
 - One delivery unit may require multiple contour tasks.
 - A contour task may be further decomposed inside the contour.
 - Internal contour decomposition is used to improve reviewability, verification, and execution clarity.
+- By default, a delivery unit is centered on a user-visible effect or user-scenario outcome.
+- A non-user-facing delivery unit is allowed only as an explicit exception when it has independently verifiable system-level or operational value, or when it is a mandatory enabling change for later user-facing delivery units.
+- A delivery unit is a canonical repository artifact, not just a GitHub Issue.
+- GitHub stores the operational projection of the delivery unit, not the canonical definition.
 
 ## Parallelism
 
@@ -178,7 +183,7 @@ A delivery unit is ready for implementation only when all of the following are t
 - the delivery unit itself is approved;
 - the delivery-unit package is approved;
 - the system specification for that delivery unit is approved;
-- the architecture decision package for that delivery unit is approved;
+- the architecture decision package for that delivery unit is approved when the delivery unit declares it as required;
 - the participating contours are defined;
 - a contour task exists for each participating contour;
 - each contour task is linked to the required specifications and architecture decisions;
@@ -187,6 +192,49 @@ A delivery unit is ready for implementation only when all of the following are t
 - readiness criteria are defined for each execution task;
 - there are no open contradictions between requirements, specification, and architecture;
 - there are no open blockers that prevent implementation from starting.
+
+A delivery unit is not ready for implementation when:
+
+- its architecture-decision status is `deferred`
+- its architecture-decision status is `required` and the required architecture decision package is not approved
+
+## Minimum Artifact Set Per Delivery Unit
+
+The future template uses this minimum mandatory artifact set per delivery unit:
+
+1. one `delivery_unit`
+2. at least one `specification`
+3. at least one `contour_task` for each participating contour
+4. at least one `execution_task` for each contour that is allowed to start work
+
+`architecture_decision` is conditionally mandatory, not universally mandatory.
+
+It is required when the delivery unit:
+
+- introduces a new architectural constraint
+- changes an existing architectural decision
+- creates a cross-contour consequence
+- changes a significant non-functional property
+- introduces a failure or recovery strategy that cannot be treated as a local implementation detail
+
+Each `delivery_unit` must explicitly record:
+
+- `architecture_decision_status`
+- `architecture_decision_refs`
+- `architecture_decision_rationale`
+
+Allowed values for `architecture_decision_status`:
+
+- `required`
+- `not_required`
+- `deferred`
+
+Each `delivery_unit` must also declare its delivery-unit type:
+
+- `user_facing`
+- `internal_enabler`
+
+`user_facing` is the default.
 
 ## Artifact Model
 
@@ -264,6 +312,52 @@ Contour codes currently assumed in the design are:
 
 Identifiers are stable keys only. Business meaning, release context, and version semantics must live in fields and typed links, not inside the identifier body.
 
+When a GitHub Issue or Project item represents one of these entities operationally, the canonical identifier must be carried explicitly in the title or body rather than replaced by the GitHub numeric issue id.
+
+## GitHub Project Status Model
+
+The future template uses this closed GitHub Project status model:
+
+- `Draft`
+- `Ready for Approval`
+- `Approved`
+- `Ready for Decomposition`
+- `Decomposed`
+- `Ready for Implementation`
+- `In Implementation`
+- `In Review`
+- `Ready for Integration Testing`
+- `In Integration Testing`
+- `Waiting for Fix`
+- `Ready for Acceptance`
+- `Accepted`
+- `Ready for Release`
+- `Released`
+- `Done`
+- `Blocked`
+- `Cancelled`
+
+These statuses are part of the accepted baseline for the future template.
+
+## Post-Implementation Workflow
+
+The future template uses this closed delivery-unit flow after implementation begins:
+
+1. `Ready for Implementation`
+2. `In Implementation`
+3. `In Review`
+4. `Ready for Integration Testing`
+5. `In Integration Testing`
+6. if testing finds defects or contradictions -> `Waiting for Fix` -> back to `Ready for Implementation`
+7. if testing passes -> `Ready for Acceptance`
+8. `Accepted`
+9. if release is required -> `Ready for Release` -> `Released` -> `Done`
+10. if release is not required -> `Accepted` -> `Done`
+
+Integration testing is performed at delivery-unit level against the assembled delivery-unit result after all required execution-task changes are merged.
+
+Defects found in integration testing create linked fix work for the same delivery unit and keep the parent delivery unit open until the fix path is merged and retested.
+
 ## Mandatory Link Rules
 
 The future template assumes these minimum validity rules:
@@ -276,6 +370,12 @@ The future template assumes these minimum validity rules:
 - `contour_task` must depend on at least one `specification` or `architecture_decision`
 - `execution_task` must have exactly one parent `contour_task`
 - `execution_task` must implement at least one `specification` or `architecture_decision`
+- every `delivery_unit` must declare `architecture_decision_status`
+- if `architecture_decision_status = required`, the `delivery_unit` must reference at least one `architecture_decision`
+- if `architecture_decision_status = not_required`, the `delivery_unit` must record a rationale for why a separate architecture decision is unnecessary
+- if `architecture_decision_status = deferred`, the `delivery_unit` is not implementation-ready
+- every `delivery_unit` must declare whether it is `user_facing` or `internal_enabler`
+- `internal_enabler` delivery units must define independently verifiable system-level or operational acceptance criteria
 
 Additional readiness assumptions in the future template:
 
@@ -290,6 +390,10 @@ The following items should be treated as already clarified and accepted for the 
 - workflow design discussion is part of requirements elicitation for that new template
 - the accepted role model includes requirements analyst, system analyst, architect, implementation coordinator, and implementation executors by contour
 - `architecture_decision` is a separate artifact type
+- `architecture_decision` is conditionally mandatory at delivery-unit level and is governed by explicit delivery-unit metadata
+- `delivery_unit` is the smallest independently implementable and independently acceptable change package
+- `delivery_unit` is a canonical repository artifact with a GitHub operational projection
+- the future template uses a closed GitHub Project status model for delivery-unit flow
 - the future template uses a strict typed-link model rather than a free-form graph
 - `implements` belongs only to `execution_task`
 - `delivery_unit` is discussed as `единица поставки`
@@ -298,12 +402,5 @@ The following items should be treated as already clarified and accepted for the 
 
 ## Open Questions
 
-- What exact statuses should exist in GitHub Project for this new process?
-- How should the post-implementation part of the workflow be designed: integration validation, final acceptance, release, and deployment?
-- How exactly should testing be organized after merge:
-  - what environment is tested;
-  - whether a dedicated integration branch is needed;
-  - whether testing runs only from `main` or from a delivery-unit assembly branch;
-  - who creates follow-up bugs or fix tasks after test failure;
-  - which status transitions are used while a delivery unit is under test and after test failure.
-- What minimal artifact set is required per delivery unit so the process stays strict without becoming document-heavy?
+- What exact repository artifact shape should be used for canonical `delivery_unit`, `contour_task`, and `execution_task` documents?
+- What exact branch strategy should be used for delivery-unit assembly before integration testing?

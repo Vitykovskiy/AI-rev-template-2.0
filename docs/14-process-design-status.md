@@ -24,9 +24,9 @@ The current repository is using its existing template workflow to orchestrate th
 
 The current design step is:
 
-- continue from the accepted baseline and close the remaining open requirements for the future template.
+- translate the accepted baseline into canonical standalone template documents and artifact shapes.
 
-The artifact-link model, identifier scheme, and minimum link validity rules have already been discussed and recorded in `docs/13-agent-first-sdd-decisions.md`.
+The artifact-link model, identifier scheme, minimum link validity rules, minimum artifact set per delivery unit, delivery-unit status model, and post-implementation workflow shape have already been discussed and recorded in `docs/13-agent-first-sdd-decisions.md`.
 
 ## Accepted Decisions
 
@@ -44,10 +44,8 @@ Open questions are currently recorded in:
 
 The most important currently open questions are:
 
-- the exact readiness criteria before implementation starts;
-- the exact GitHub Project statuses for the new process;
-- the post-implementation workflow shape;
-- the minimal artifact set per delivery unit.
+- the exact canonical file shape for repository artifacts such as `delivery_unit`;
+- the exact branch strategy for delivery-unit assembly before integration testing.
 
 ## Practical Rule For New Sessions
 
