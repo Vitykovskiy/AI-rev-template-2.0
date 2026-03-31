@@ -22,6 +22,8 @@ The template supports:
 ## Directory Layout
 
 - `AGENTS.md` - session rules and routing model for the template
+- `instructions/README.md` - navigation entry for the orchestration layer
+- `instructions/orchestration-router.md` - explicit request, stage, and artifact router
 - `docs/00-template-overview.md` - concise orientation for a new session
 - `docs/01-communication-rules.md` - user dialogue rules with highest priority
 - `docs/02-process-model.md` - canonical process model
@@ -45,5 +47,6 @@ The template supports:
 ## Current State
 
 This package now defines the canonical document shell for the template.
+The operational workflow state is stored in `./.ai-rev-template.workflow-state.json` and is treated as runtime input, not as a source-of-truth replacement for the canonical documents.
 
 Further expansion should stay within the approved source-of-truth documents and the explicit link model.

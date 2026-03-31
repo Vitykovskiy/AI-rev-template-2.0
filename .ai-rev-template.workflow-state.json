@@ -1,0 +1,9 @@
+{
+  "current_stage": "Business analysis",
+  "active_artifact_kind": null,
+  "active_artifact_id": null,
+  "request_intent": null,
+  "owner_role": null,
+  "handoff_required": false,
+  "blocker_state": "clear"
+}

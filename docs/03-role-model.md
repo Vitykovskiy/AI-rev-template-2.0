@@ -22,6 +22,12 @@
 - Reviewer: checks execution-task correctness before merge.
 - Validator: confirms delivery-unit level readiness and integration results.
 
+## Role Activation
+
+The orchestration router in `instructions/orchestration-router.md` selects the primary role before any subagent work begins.
+
+This document defines canonical boundaries and subagent triggers; it does not create a separate assignment system.
+
 ## Role Boundaries
 
 - The system analyst cannot approve architecture decisions alone when `architecture_decision_status = required`.

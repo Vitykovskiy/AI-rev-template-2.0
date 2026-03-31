@@ -29,6 +29,8 @@ This gap is reconciled here by treating those documents as canonical endpoints f
 - `docs/07` controls the minimum delivery-unit package.
 - `docs/08` controls ownership.
 - `docs/09` controls stage routing and document discovery.
+- `instructions/orchestration-router.md` consumes this index to choose the primary role for a request.
+- `docs/09` remains the canonical stage discovery table; it does not replace the router.
 - `docs/10` controls GitHub projection.
 - `docs/11` controls handoff.
 - `docs/12` controls branch and PR policy.

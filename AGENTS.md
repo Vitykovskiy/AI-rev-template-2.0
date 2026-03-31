@@ -25,6 +25,13 @@ GitHub is the operational source of truth for work state only.
 
 Implementation must follow approved artifacts and explicit typed links between them.
 
+## Navigation Layer
+
+The orchestration router is the first navigation decision for multi-role work.
+
+Read `instructions/README.md` and `instructions/orchestration-router.md` before the canonical document order below.
+The router consumes `./.ai-rev-template.workflow-state.json` as runtime input alongside the canonical documents.
+
 ## Main Stages
 
 The template separates work into these canonical stages:
