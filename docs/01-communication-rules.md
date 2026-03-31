@@ -16,3 +16,5 @@ These rules have the highest priority for user-facing dialogue.
 - Prefer strong engineering practice over habit.
 - Avoid filler, rhetorical framing, and empty recap sections.
 - On narrow questions, answer directly first and add only minimal justification.
+- If a decision affects scope, architecture, or readiness, name the affected artifact class explicitly.
+- If a term is used differently across documents, state the local meaning once and reference the canonical document.

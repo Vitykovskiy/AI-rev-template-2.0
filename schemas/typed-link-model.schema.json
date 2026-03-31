@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/typed-link-model.schema.json",
+  "title": "Typed Link Model",
+  "type": "object",
+  "required": [
+    "source_kind",
+    "source_id",
+    "target_kind",
+    "target_id",
+    "relation"
+  ],
+  "properties": {
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "requirement",
+        "specification",
+        "architecture_decision",
+        "delivery_unit",
+        "contour_task",
+        "execution_task"
+      ]
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_kind": {
+      "type": "string",
+      "enum": [
+        "requirement",
+        "specification",
+        "architecture_decision",
+        "delivery_unit",
+        "contour_task",
+        "execution_task"
+      ]
+    },
+    "target_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "relation": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "source_kind": {
+          "const": "requirement"
+        },
+        "target_kind": {
+          "const": "requirement"
+        },
+        "relation": {
+          "const": "supersedes"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "requirement"
+        },
+        "target_kind": {
+          "const": "specification"
+        },
+        "relation": {
+          "const": "refines"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "requirement"
+        },
+        "target_kind": {
+          "const": "delivery_unit"
+        },
+        "relation": {
+          "const": "decomposes_into"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "specification"
+        },
+        "target_kind": {
+          "const": "specification"
+        },
+        "relation": {
+          "const": "supersedes"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "specification"
+        },
+        "target_kind": {
+          "const": "delivery_unit"
+        },
+        "relation": {
+          "const": "decomposes_into"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "architecture_decision"
+        },
+        "target_kind": {
+          "const": "architecture_decision"
+        },
+        "relation": {
+          "const": "supersedes"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "architecture_decision"
+        },
+        "target_kind": {
+          "const": "specification"
+        },
+        "relation": {
+          "const": "constrains"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "delivery_unit"
+        },
+        "target_kind": {
+          "const": "delivery_unit"
+        },
+        "relation": {
+          "const": "depends_on"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "delivery_unit"
+        },
+        "target_kind": {
+          "const": "contour_task"
+        },
+        "relation": {
+          "const": "decomposes_into"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "contour_task"
+        },
+        "target_kind": {
+          "const": "contour_task"
+        },
+        "relation": {
+          "const": "depends_on"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "contour_task"
+        },
+        "target_kind": {
+          "const": "execution_task"
+        },
+        "relation": {
+          "const": "decomposes_into"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "contour_task"
+        },
+        "target_kind": {
+          "const": "specification"
+        },
+        "relation": {
+          "const": "depends_on"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "contour_task"
+        },
+        "target_kind": {
+          "const": "architecture_decision"
+        },
+        "relation": {
+          "const": "depends_on"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "execution_task"
+        },
+        "target_kind": {
+          "const": "execution_task"
+        },
+        "relation": {
+          "const": "depends_on"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "execution_task"
+        },
+        "target_kind": {
+          "const": "specification"
+        },
+        "relation": {
+          "const": "implements"
+        }
+      }
+    },
+    {
+      "properties": {
+        "source_kind": {
+          "const": "execution_task"
+        },
+        "target_kind": {
+          "const": "architecture_decision"
+        },
+        "relation": {
+          "const": "implements"
+        }
+      }
+    }
+  ]
+}

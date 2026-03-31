@@ -1,0 +1,663 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/canonical-artifact-model.schema.json",
+  "title": "Canonical Artifact Model",
+  "type": "object",
+  "required": [
+    "package_id",
+    "package_name",
+    "package_version",
+    "artifacts",
+    "links"
+  ],
+  "properties": {
+    "package_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9][A-Z0-9_-]*$"
+    },
+    "package_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "package_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact"
+      },
+      "minItems": 1
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Ready for Approval",
+        "Approved"
+      ]
+    },
+    "project_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Ready for Approval",
+        "Approved",
+        "Ready for Decomposition",
+        "Decomposed",
+        "Ready for Implementation",
+        "In Implementation",
+        "In Review",
+        "Ready for Integration Testing",
+        "In Integration Testing",
+        "Waiting for Fix",
+        "Ready for Acceptance",
+        "Accepted",
+        "Ready for Release",
+        "Released",
+        "Done",
+        "Blocked",
+        "Cancelled"
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "artifact_kind",
+        "title",
+        "approval_status",
+        "project_status",
+        "content"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9-]*$"
+        },
+        "artifact_kind": {
+          "type": "string",
+          "enum": [
+            "requirement",
+            "specification",
+            "architecture_decision",
+            "delivery_unit",
+            "contour_task",
+            "execution_task"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approval_status": {
+          "$ref": "#/$defs/approval_status"
+        },
+        "project_status": {
+          "$ref": "#/$defs/project_status"
+        },
+        "content": {}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "artifact_kind": {
+                "const": "requirement"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "$ref": "#/$defs/requirement_content"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "artifact_kind": {
+                "const": "specification"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "$ref": "#/$defs/specification_content"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "artifact_kind": {
+                "const": "architecture_decision"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "$ref": "#/$defs/architecture_decision_content"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "artifact_kind": {
+                "const": "delivery_unit"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "$ref": "#/$defs/delivery_unit_content"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "artifact_kind": {
+                "const": "contour_task"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "$ref": "#/$defs/contour_task_content"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "artifact_kind": {
+                "const": "execution_task"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "$ref": "#/$defs/execution_task_content"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "requirement_content": {
+      "type": "object",
+      "required": [
+        "statement",
+        "stakeholders",
+        "success_criteria",
+        "constraints"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "specification_content": {
+      "type": "object",
+      "required": [
+        "summary",
+        "based_on_requirement_ids",
+        "functional_requirements",
+        "non_functional_requirements",
+        "state_transitions"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "based_on_requirement_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "functional_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "non_functional_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "state_transitions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "architecture_decision_content": {
+      "type": "object",
+      "required": [
+        "context",
+        "decision",
+        "alternatives",
+        "consequences",
+        "constrains_specification_ids"
+      ],
+      "properties": {
+        "context": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "consequences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "constrains_specification_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "delivery_unit_content": {
+      "type": "object",
+      "required": [
+        "purpose",
+        "scope",
+        "delivery_unit_type",
+        "acceptance_scope",
+        "parent_requirement_ids",
+        "specification_ids",
+        "participating_contours",
+        "architecture_decision_status",
+        "architecture_decision_ids",
+        "architecture_decision_rationale",
+        "dependencies",
+        "definition_of_ready",
+        "definition_of_done",
+        "acceptance_criteria"
+      ],
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "delivery_unit_type": {
+          "type": "string",
+          "enum": [
+            "user_facing",
+            "internal_enabler"
+          ]
+        },
+        "acceptance_scope": {
+          "type": "string",
+          "enum": [
+            "user",
+            "system"
+          ]
+        },
+        "parent_requirement_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "specification_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "participating_contours": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "architecture_decision_status": {
+          "type": "string",
+          "enum": [
+            "required",
+            "not_required",
+            "deferred"
+          ]
+        },
+        "architecture_decision_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "architecture_decision_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "definition_of_ready": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "definition_of_done": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "contour_task_content": {
+      "type": "object",
+      "required": [
+        "delivery_unit_id",
+        "contour_code",
+        "responsibility",
+        "inputs",
+        "outputs",
+        "specification_ids",
+        "architecture_decision_ids",
+        "dependencies",
+        "definition_of_ready",
+        "definition_of_done"
+      ],
+      "properties": {
+        "delivery_unit_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contour_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "responsibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "specification_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "architecture_decision_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "definition_of_ready": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "definition_of_done": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "execution_task_content": {
+      "type": "object",
+      "required": [
+        "contour_task_id",
+        "responsibility",
+        "inputs",
+        "outputs",
+        "implementation_refs",
+        "dependencies",
+        "readiness_criteria",
+        "definition_of_done"
+      ],
+      "properties": {
+        "contour_task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "responsibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "implementation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "readiness_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "definition_of_done": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "required": [
+        "source_kind",
+        "source_id",
+        "target_kind",
+        "target_id",
+        "relation"
+      ],
+      "properties": {
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "requirement",
+            "specification",
+            "architecture_decision",
+            "delivery_unit",
+            "contour_task",
+            "execution_task"
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_kind": {
+          "type": "string",
+          "enum": [
+            "requirement",
+            "specification",
+            "architecture_decision",
+            "delivery_unit",
+            "contour_task",
+            "execution_task"
+          ]
+        },
+        "target_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relation": {
+          "type": "string",
+          "enum": [
+            "supersedes",
+            "refines",
+            "decomposes_into",
+            "constrains",
+            "depends_on",
+            "implements"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -50,6 +50,33 @@ The template uses this closed project-status model:
 - `Blocked`
 - `Cancelled`
 
+## State Machine
+
+The canonical state machine is:
+
+1. `Draft`
+2. `Ready for Approval`
+3. `Approved`
+4. `Ready for Decomposition`
+5. `Decomposed`
+6. `Ready for Implementation`
+7. `In Implementation`
+8. `In Review`
+9. `Ready for Integration Testing`
+10. `In Integration Testing`
+11. `Waiting for Fix` if validation fails
+12. back to `Ready for Implementation` after fixes are linked
+13. `Ready for Acceptance`
+14. `Accepted`
+15. `Ready for Release` when release is required
+16. `Released`
+17. `Done`
+
+Non-terminal overlay states:
+
+- `Blocked` may be applied from any non-terminal state when an explicit blocker prevents progress;
+- `Cancelled` is terminal and removes the item from the active workflow.
+
 ## Status Meanings
 
 - `Draft` means the artifact or delivery unit exists but is still being prepared.
@@ -70,6 +97,14 @@ The template uses this closed project-status model:
 - `Done` means the delivery unit is fully complete.
 - `Blocked` means progress is impossible because of an explicit blocker.
 - `Cancelled` means the unit is intentionally terminated.
+
+## Transition Guards
+
+- a state transition must not skip required approvals;
+- a blocked item may only move when the blocker is explicitly cleared;
+- `Waiting for Fix` requires a linked fix artifact for the same delivery unit;
+- `Ready for Release` is only valid when release or deployment is required by the delivery unit;
+- `Done` is only valid when all required acceptance, release, and cleanup criteria are satisfied.
 
 ## Post-Implementation Flow
 

@@ -1,0 +1,182 @@
+{
+  "package_id": "PKG-USER-001",
+  "package_name": "User-facing package with ADR and fix loop",
+  "package_version": "1.0.0",
+  "artifacts": [
+    {
+      "artifact_id": "REQ-101",
+      "artifact_kind": "requirement",
+      "title": "Provide deterministic handoff-visible delivery reporting",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "statement": "A user-facing dashboard change must show delivery-unit status and blockers consistently across implementation, validation, and release.",
+        "stakeholders": ["product owner", "delivery manager", "reviewer"],
+        "success_criteria": ["Users can inspect status and blockers after release.", "Fix loops preserve traceability to the same delivery unit."],
+        "constraints": ["The implementation must preserve typed-link traceability.", "Validation and release evidence must stay repository-linked."]
+      }
+    },
+    {
+      "artifact_id": "SPEC-101",
+      "artifact_kind": "specification",
+      "title": "Status timeline UI contract",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "summary": "Define the user-facing contract for showing delivery-unit lifecycle, blockers, and post-validation fix state.",
+        "based_on_requirement_ids": ["REQ-101"],
+        "functional_requirements": ["Timeline must show canonical delivery-unit status.", "Blocked state must show explicit blocker reason.", "Fix loop must remain attached to the same delivery unit."],
+        "non_functional_requirements": ["Status updates must be deterministic and auditable."],
+        "state_transitions": ["Ready for Implementation -> In Implementation -> In Review -> Ready for Integration Testing -> In Integration Testing -> Waiting for Fix -> Ready for Implementation -> Ready for Acceptance -> Accepted -> Ready for Release -> Released -> Done"]
+      }
+    },
+    {
+      "artifact_id": "ADR-101",
+      "artifact_kind": "architecture_decision",
+      "title": "Use canonical delivery-unit event stream as status source",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "context": "The dashboard needs one authoritative status source across UI, validation, and release evidence.",
+        "decision": "Project the canonical delivery-unit event stream into the UI instead of deriving state from ad hoc task comments.",
+        "alternatives": ["Derive status from GitHub comments", "Derive status from PR labels only"],
+        "consequences": ["UI and validation depend on the same canonical status history.", "Architecture support is required for event-source contract changes."],
+        "constrains_specification_ids": ["SPEC-101"]
+      }
+    },
+    {
+      "artifact_id": "DU-101",
+      "artifact_kind": "delivery_unit",
+      "title": "Dashboard delivery status timeline",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "purpose": "Deliver a user-facing status timeline backed by canonical delivery-unit state.",
+        "scope": "UI timeline, typed status mapping, blocker rendering, fix-loop rendering, and release completion.",
+        "delivery_unit_type": "user_facing",
+        "acceptance_scope": "user",
+        "parent_requirement_ids": ["REQ-101"],
+        "specification_ids": ["SPEC-101"],
+        "participating_contours": ["FE", "BE"],
+        "architecture_decision_status": "required",
+        "architecture_decision_ids": ["ADR-101"],
+        "architecture_decision_rationale": "A cross-contour authoritative event source is required for consistent state projection.",
+        "dependencies": [],
+        "definition_of_ready": ["Requirement, specification, and ADR are approved.", "Contour and execution-task decomposition is complete."],
+        "definition_of_done": ["Timeline is released.", "Fix-loop evidence remains linked to DU-101."],
+        "acceptance_criteria": ["A user can inspect current status, blocker reason, and recovered fix-loop outcome from one timeline."]
+      }
+    },
+    {
+      "artifact_id": "CT-FE-101",
+      "artifact_kind": "contour_task",
+      "title": "Frontend timeline implementation",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "delivery_unit_id": "DU-101",
+        "contour_code": "FE",
+        "responsibility": "Implement the UI timeline and fix-loop state rendering.",
+        "inputs": ["SPEC-101", "ADR-101"],
+        "outputs": ["Timeline UI", "Release-ready user-facing rendering"],
+        "specification_ids": ["SPEC-101"],
+        "architecture_decision_ids": ["ADR-101"],
+        "dependencies": [],
+        "definition_of_ready": ["FE task has approved upstream artifacts."],
+        "definition_of_done": ["All FE execution tasks for DU-101 are merged and validated."]
+      }
+    },
+    {
+      "artifact_id": "CT-BE-101",
+      "artifact_kind": "contour_task",
+      "title": "Backend status event projection",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "delivery_unit_id": "DU-101",
+        "contour_code": "BE",
+        "responsibility": "Provide the canonical event projection consumed by the timeline.",
+        "inputs": ["SPEC-101", "ADR-101"],
+        "outputs": ["Status event endpoint"],
+        "specification_ids": ["SPEC-101"],
+        "architecture_decision_ids": ["ADR-101"],
+        "dependencies": [],
+        "definition_of_ready": ["BE task has approved upstream artifacts."],
+        "definition_of_done": ["All BE execution tasks for DU-101 are merged and validated."]
+      }
+    },
+    {
+      "artifact_id": "ET-BE-101-01",
+      "artifact_kind": "execution_task",
+      "title": "Implement canonical status event endpoint",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "contour_task_id": "CT-BE-101",
+        "responsibility": "Expose status events and blocker/fix metadata for DU-101.",
+        "inputs": ["SPEC-101", "ADR-101"],
+        "outputs": ["status endpoint", "integration evidence"],
+        "implementation_refs": ["SPEC-101", "ADR-101"],
+        "dependencies": [],
+        "readiness_criteria": ["ADR event-source contract is approved."],
+        "definition_of_done": ["Backend endpoint is merged with validation evidence."]
+      }
+    },
+    {
+      "artifact_id": "ET-FE-101-01",
+      "artifact_kind": "execution_task",
+      "title": "Render status timeline UI",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "contour_task_id": "CT-FE-101",
+        "responsibility": "Render canonical status timeline and blocker details.",
+        "inputs": ["SPEC-101", "ADR-101"],
+        "outputs": ["timeline UI"],
+        "implementation_refs": ["SPEC-101", "ADR-101"],
+        "dependencies": ["ET-BE-101-01"],
+        "readiness_criteria": ["Backend event endpoint contract is available."],
+        "definition_of_done": ["Frontend timeline PR is merged."]
+      }
+    },
+    {
+      "artifact_id": "ET-FE-101-02",
+      "artifact_kind": "execution_task",
+      "title": "Fix timeline recovery after integration defect",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "contour_task_id": "CT-FE-101",
+        "responsibility": "Correct timeline rendering for post-fix recovery after integration validation.",
+        "inputs": ["SPEC-101", "DU-101"],
+        "outputs": ["fix PR", "updated validation evidence"],
+        "implementation_refs": ["SPEC-101"],
+        "dependencies": ["ET-FE-101-01"],
+        "readiness_criteria": ["Integration testing identified a linked defect for DU-101."],
+        "definition_of_done": ["Fix PR is merged and DU-101 returns to acceptance flow."]
+      }
+    }
+  ],
+  "links": [
+    {"source_kind": "requirement", "source_id": "REQ-101", "target_kind": "specification", "target_id": "SPEC-101", "relation": "refines"},
+    {"source_kind": "requirement", "source_id": "REQ-101", "target_kind": "delivery_unit", "target_id": "DU-101", "relation": "decomposes_into"},
+    {"source_kind": "specification", "source_id": "SPEC-101", "target_kind": "delivery_unit", "target_id": "DU-101", "relation": "decomposes_into"},
+    {"source_kind": "architecture_decision", "source_id": "ADR-101", "target_kind": "specification", "target_id": "SPEC-101", "relation": "constrains"},
+    {"source_kind": "delivery_unit", "source_id": "DU-101", "target_kind": "contour_task", "target_id": "CT-FE-101", "relation": "decomposes_into"},
+    {"source_kind": "delivery_unit", "source_id": "DU-101", "target_kind": "contour_task", "target_id": "CT-BE-101", "relation": "decomposes_into"},
+    {"source_kind": "contour_task", "source_id": "CT-FE-101", "target_kind": "specification", "target_id": "SPEC-101", "relation": "depends_on"},
+    {"source_kind": "contour_task", "source_id": "CT-FE-101", "target_kind": "architecture_decision", "target_id": "ADR-101", "relation": "depends_on"},
+    {"source_kind": "contour_task", "source_id": "CT-FE-101", "target_kind": "execution_task", "target_id": "ET-FE-101-01", "relation": "decomposes_into"},
+    {"source_kind": "contour_task", "source_id": "CT-FE-101", "target_kind": "execution_task", "target_id": "ET-FE-101-02", "relation": "decomposes_into"},
+    {"source_kind": "contour_task", "source_id": "CT-BE-101", "target_kind": "specification", "target_id": "SPEC-101", "relation": "depends_on"},
+    {"source_kind": "contour_task", "source_id": "CT-BE-101", "target_kind": "architecture_decision", "target_id": "ADR-101", "relation": "depends_on"},
+    {"source_kind": "contour_task", "source_id": "CT-BE-101", "target_kind": "execution_task", "target_id": "ET-BE-101-01", "relation": "decomposes_into"},
+    {"source_kind": "execution_task", "source_id": "ET-BE-101-01", "target_kind": "specification", "target_id": "SPEC-101", "relation": "implements"},
+    {"source_kind": "execution_task", "source_id": "ET-BE-101-01", "target_kind": "architecture_decision", "target_id": "ADR-101", "relation": "implements"},
+    {"source_kind": "execution_task", "source_id": "ET-FE-101-01", "target_kind": "execution_task", "target_id": "ET-BE-101-01", "relation": "depends_on"},
+    {"source_kind": "execution_task", "source_id": "ET-FE-101-01", "target_kind": "specification", "target_id": "SPEC-101", "relation": "implements"},
+    {"source_kind": "execution_task", "source_id": "ET-FE-101-01", "target_kind": "architecture_decision", "target_id": "ADR-101", "relation": "implements"},
+    {"source_kind": "execution_task", "source_id": "ET-FE-101-02", "target_kind": "execution_task", "target_id": "ET-FE-101-01", "relation": "depends_on"},
+    {"source_kind": "execution_task", "source_id": "ET-FE-101-02", "target_kind": "specification", "target_id": "SPEC-101", "relation": "implements"}
+  ]
+}

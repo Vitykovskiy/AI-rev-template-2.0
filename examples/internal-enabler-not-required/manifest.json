@@ -1,0 +1,102 @@
+{
+  "package_id": "PKG-INT-001",
+  "package_name": "Internal enabler without separate ADR",
+  "package_version": "1.0.0",
+  "artifacts": [
+    {
+      "artifact_id": "REQ-201",
+      "artifact_kind": "requirement",
+      "title": "Validate repository scaffolding deterministically",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "statement": "The template repository must validate its own operational scaffolding without provider-specific extensions.",
+        "stakeholders": ["maintainer", "automation"],
+        "success_criteria": ["Templates, schemas, and tools are checked together."],
+        "constraints": ["The validator remains dependency-free."]
+      }
+    },
+    {
+      "artifact_id": "SPEC-201",
+      "artifact_kind": "specification",
+      "title": "Repository scaffolding validation contract",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "summary": "Define deterministic checks for template files, PR hygiene, and example package presence.",
+        "based_on_requirement_ids": ["REQ-201"],
+        "functional_requirements": ["Validator checks required files and issue templates.", "CI can run validation entrypoints directly."],
+        "non_functional_requirements": ["No third-party runtime dependency is required."],
+        "state_transitions": ["Approved -> Ready for Implementation"]
+      }
+    },
+    {
+      "artifact_id": "DU-201",
+      "artifact_kind": "delivery_unit",
+      "title": "Repository scaffolding enforcement",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "purpose": "Keep the template self-checking and resistant to drift.",
+        "scope": "Issue templates, PR template, validation entrypoints, and CI workflow.",
+        "delivery_unit_type": "internal_enabler",
+        "acceptance_scope": "system",
+        "parent_requirement_ids": ["REQ-201"],
+        "specification_ids": ["SPEC-201"],
+        "participating_contours": ["DO"],
+        "architecture_decision_status": "not_required",
+        "architecture_decision_ids": [],
+        "architecture_decision_rationale": "This unit formalizes local scaffolding only and stays within existing architecture decisions.",
+        "dependencies": [],
+        "definition_of_ready": ["Specification is approved.", "Repository layout is known."],
+        "definition_of_done": ["Repository validator and workflow pass."],
+        "acceptance_criteria": ["A maintainer can validate the whole template from the repository alone."]
+      }
+    },
+    {
+      "artifact_id": "CT-DO-201",
+      "artifact_kind": "contour_task",
+      "title": "DevOps scaffolding task",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "delivery_unit_id": "DU-201",
+        "contour_code": "DO",
+        "responsibility": "Maintain validation workflow and template scaffolding.",
+        "inputs": ["SPEC-201"],
+        "outputs": ["validator tooling", "workflow wiring"],
+        "specification_ids": ["SPEC-201"],
+        "architecture_decision_ids": [],
+        "dependencies": [],
+        "definition_of_ready": ["DU-201 is approved."],
+        "definition_of_done": ["All required scaffold files are validated."]
+      }
+    },
+    {
+      "artifact_id": "ET-DO-201-01",
+      "artifact_kind": "execution_task",
+      "title": "Implement repository validation entrypoint",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "contour_task_id": "CT-DO-201",
+        "responsibility": "Implement and maintain repository validation commands.",
+        "inputs": ["SPEC-201", "DU-201"],
+        "outputs": ["tools/validate_repo.py", ".github/workflows/validate.yml"],
+        "implementation_refs": ["SPEC-201"],
+        "dependencies": [],
+        "readiness_criteria": ["Target files exist."],
+        "definition_of_done": ["Validator rejects missing required files and malformed PR metadata."]
+      }
+    }
+  ],
+  "links": [
+    {"source_kind": "requirement", "source_id": "REQ-201", "target_kind": "specification", "target_id": "SPEC-201", "relation": "refines"},
+    {"source_kind": "requirement", "source_id": "REQ-201", "target_kind": "delivery_unit", "target_id": "DU-201", "relation": "decomposes_into"},
+    {"source_kind": "specification", "source_id": "SPEC-201", "target_kind": "delivery_unit", "target_id": "DU-201", "relation": "decomposes_into"},
+    {"source_kind": "delivery_unit", "source_id": "DU-201", "target_kind": "contour_task", "target_id": "CT-DO-201", "relation": "decomposes_into"},
+    {"source_kind": "contour_task", "source_id": "CT-DO-201", "target_kind": "specification", "target_id": "SPEC-201", "relation": "depends_on"},
+    {"source_kind": "contour_task", "source_id": "CT-DO-201", "target_kind": "execution_task", "target_id": "ET-DO-201-01", "relation": "decomposes_into"},
+    {"source_kind": "execution_task", "source_id": "ET-DO-201-01", "target_kind": "specification", "target_id": "SPEC-201", "relation": "implements"}
+  ]
+}

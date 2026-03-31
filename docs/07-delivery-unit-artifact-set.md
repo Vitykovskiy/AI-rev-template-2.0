@@ -16,7 +16,9 @@ The package must distinguish:
 - conditionally mandatory artifacts
 - control metadata that determines package completeness
 
-## Minimum Mandatory Artifact Set
+## P0 Package
+
+The P0 package is the mandatory canonical baseline for implementation readiness.
 
 Every delivery unit must have:
 
@@ -28,6 +30,23 @@ Every delivery unit must have:
 Every delivery unit must also declare:
 
 - `delivery_unit_type = user_facing` or `delivery_unit_type = internal_enabler`
+
+## P2 Package
+
+The P2 package is the operational and governance layer around the baseline.
+
+It includes:
+
+- `docs/08-canonical-ownership-map.md`
+- `docs/09-stage-document-index.md`
+- `docs/10-github-projection.md`
+- `docs/11-handoff-protocol.md`
+- `docs/12-pr-policy-and-branch-strategy.md`
+- `docs/13-impact-assessment.md`
+- `docs/14-validation-and-anti-drift.md`
+- `docs/15-runbooks.md`
+- `docs/16-telemetry.md`
+- `docs/17-lifecycle-cleanup.md`
 
 ## Conditionally Mandatory Artifact Set
 

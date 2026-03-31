@@ -1,0 +1,399 @@
+{
+  "package_id": "PKG-001",
+  "package_name": "End-to-end validation package",
+  "package_version": "1.0.0",
+  "artifacts": [
+    {
+      "artifact_id": "REQ-001",
+      "artifact_kind": "requirement",
+      "title": "Validate canonical package structure",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "statement": "The repository must validate canonical artifacts, typed links, readiness gates, and text hygiene without external dependencies.",
+        "stakeholders": [
+          "system designer",
+          "implementation agent",
+          "reviewer"
+        ],
+        "success_criteria": [
+          "A package can be validated from a single manifest file.",
+          "Validation reports missing artifacts and invalid links deterministically."
+        ],
+        "constraints": [
+          "No external runtime dependencies are required for validation.",
+          "UTF-8 and mojibake defects must be detected automatically."
+        ]
+      }
+    },
+    {
+      "artifact_id": "SPEC-001",
+      "artifact_kind": "specification",
+      "title": "Validation model for user-facing work",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "summary": "Define the package shape, link constraints, and readiness checks for the user-facing delivery path.",
+        "based_on_requirement_ids": [
+          "REQ-001"
+        ],
+        "functional_requirements": [
+          "The package must declare requirements, specifications, delivery units, contour tasks, and execution tasks.",
+          "Each typed link must be validated against the allowed relation matrix."
+        ],
+        "non_functional_requirements": [
+          "Validation must be deterministic and dependency-free."
+        ],
+        "state_transitions": [
+          "Approved -> Ready for Implementation"
+        ]
+      }
+    },
+    {
+      "artifact_id": "DU-001",
+      "artifact_kind": "delivery_unit",
+      "title": "User-facing validation scaffold",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "purpose": "Ship the user-facing layer that makes the template machine-checkable.",
+        "scope": "Canonical artifact schema, typed-link schema, and package-level validation for the user-facing path.",
+        "delivery_unit_type": "user_facing",
+        "acceptance_scope": "user",
+        "parent_requirement_ids": [
+          "REQ-001"
+        ],
+        "specification_ids": [
+          "SPEC-001"
+        ],
+        "participating_contours": [
+          "FE"
+        ],
+        "architecture_decision_status": "not_required",
+        "architecture_decision_ids": [],
+        "architecture_decision_rationale": "The package only formalizes the canonical schema and validation rules; no separate architectural trade-off is introduced.",
+        "dependencies": [],
+        "definition_of_ready": [
+          "Requirement and specification are approved.",
+          "Typed links exist for the package boundary and internal decomposition."
+        ],
+        "definition_of_done": [
+          "The package validates end to end.",
+          "No unresolved architectural question remains."
+        ],
+        "acceptance_criteria": [
+          "A reviewer can validate the example package without reading external context."
+        ]
+      }
+    },
+    {
+      "artifact_id": "CT-FE-001",
+      "artifact_kind": "contour_task",
+      "title": "Define FE validation contour",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "delivery_unit_id": "DU-001",
+        "contour_code": "FE",
+        "responsibility": "Own the canonical artifact and typed-link contract from the user-facing perspective.",
+        "inputs": [
+          "SPEC-001"
+        ],
+        "outputs": [
+          "Validated package structure and example manifest"
+        ],
+        "specification_ids": [
+          "SPEC-001"
+        ],
+        "architecture_decision_ids": [],
+        "dependencies": [
+          "SPEC-001"
+        ],
+        "definition_of_ready": [
+          "The specification is approved.",
+          "The delivery unit is ready for implementation."
+        ],
+        "definition_of_done": [
+          "All required execution tasks for FE are present.",
+          "The contour can be handed off deterministically."
+        ]
+      }
+    },
+    {
+      "artifact_id": "ET-FE-001-01",
+      "artifact_kind": "execution_task",
+      "title": "Implement FE package validator",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "contour_task_id": "CT-FE-001",
+        "responsibility": "Implement the package validator and keep the canonical schema aligned with the example package.",
+        "inputs": [
+          "SPEC-001",
+          "DU-001"
+        ],
+        "outputs": [
+          "tools/validate_package.py",
+          "tools/validate_repo.py"
+        ],
+        "implementation_refs": [
+          "SPEC-001"
+        ],
+        "dependencies": [],
+        "readiness_criteria": [
+          "The canonical schema is present and stable.",
+          "The package example covers the target end state."
+        ],
+        "definition_of_done": [
+          "The validator rejects missing artifacts, invalid links, and non-UTF-8 text."
+        ]
+      }
+    },
+    {
+      "artifact_id": "REQ-002",
+      "artifact_kind": "requirement",
+      "title": "Validate operational scaffolding in CI",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "statement": "The repository must validate its own scaffolding in CI, including templates, issue forms, workflow wiring, and PR hygiene.",
+        "stakeholders": [
+          "maintainer",
+          "repository automation"
+        ],
+        "success_criteria": [
+          "CI can run the repository validator directly.",
+          "The validation surface includes templates, GitHub issue/PR forms, and example packages."
+        ],
+        "constraints": [
+          "The workflow should not depend on third-party validation packages."
+        ]
+      }
+    },
+    {
+      "artifact_id": "SPEC-002",
+      "artifact_kind": "specification",
+      "title": "Validation model for internal scaffolding",
+      "approval_status": "Approved",
+      "project_status": "Approved",
+      "content": {
+        "summary": "Define deterministic checks for repository scaffolding, anti-drift foundations, and PR hygiene.",
+        "based_on_requirement_ids": [
+          "REQ-002"
+        ],
+        "functional_requirements": [
+          "Validate presence of canonical schemas, templates, GitHub issue templates, and workflow entrypoints.",
+          "Validate PR title and body structure for review hygiene."
+        ],
+        "non_functional_requirements": [
+          "The implementation must remain dependency-free."
+        ],
+        "state_transitions": [
+          "Approved -> Ready for Implementation"
+        ]
+      }
+    },
+    {
+      "artifact_id": "DU-002",
+      "artifact_kind": "delivery_unit",
+      "title": "Internal scaffolding validation",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "purpose": "Keep the repository scaffold self-checking and resistant to drift.",
+        "scope": "GitHub templates, workflow entrypoints, text encoding checks, and PR hygiene checks.",
+        "delivery_unit_type": "internal_enabler",
+        "acceptance_scope": "system",
+        "parent_requirement_ids": [
+          "REQ-002"
+        ],
+        "specification_ids": [
+          "SPEC-002"
+        ],
+        "participating_contours": [
+          "DO"
+        ],
+        "architecture_decision_status": "not_required",
+        "architecture_decision_ids": [],
+        "architecture_decision_rationale": "This work only provisions deterministic validation and operational scaffolding; it does not introduce a new architecture choice.",
+        "dependencies": [],
+        "definition_of_ready": [
+          "The repository has a stable file layout.",
+          "The validation entrypoints are defined."
+        ],
+        "definition_of_done": [
+          "Repository validation can run from CI.",
+          "The scaffolding is explicitly documented and checked."
+        ],
+        "acceptance_criteria": [
+          "The internal guardrails are verifiable from the repository alone."
+        ]
+      }
+    },
+    {
+      "artifact_id": "CT-DO-001",
+      "artifact_kind": "contour_task",
+      "title": "Define DO validation contour",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "delivery_unit_id": "DU-002",
+        "contour_code": "DO",
+        "responsibility": "Own repository automation, workflow wiring, and anti-drift checks.",
+        "inputs": [
+          "SPEC-002"
+        ],
+        "outputs": [
+          "GitHub workflow and validator entrypoints"
+        ],
+        "specification_ids": [
+          "SPEC-002"
+        ],
+        "architecture_decision_ids": [],
+        "dependencies": [
+          "SPEC-002"
+        ],
+        "definition_of_ready": [
+          "The internal-enabler delivery unit is approved.",
+          "The validation model is explicit."
+        ],
+        "definition_of_done": [
+          "The repository validates itself without external dependencies.",
+          "Issue and PR templates are present."
+        ]
+      }
+    },
+    {
+      "artifact_id": "ET-DO-001-01",
+      "artifact_kind": "execution_task",
+      "title": "Implement repository validation entrypoints",
+      "approval_status": "Approved",
+      "project_status": "Ready for Implementation",
+      "content": {
+        "contour_task_id": "CT-DO-001",
+        "responsibility": "Implement repo-wide validation and PR hygiene checks in plain Python.",
+        "inputs": [
+          "SPEC-002",
+          "DU-002"
+        ],
+        "outputs": [
+          "tools/validate_pr.py",
+          "tools/validate_repo.py",
+          ".github/workflows/validate.yml"
+        ],
+        "implementation_refs": [
+          "SPEC-002"
+        ],
+        "dependencies": [],
+        "readiness_criteria": [
+          "The target file set exists.",
+          "The PR template can be validated against the same rules as CI."
+        ],
+        "definition_of_done": [
+          "Repository drift is detected automatically.",
+          "PR body hygiene is checked in automation."
+        ]
+      }
+    }
+  ],
+  "links": [
+    {
+      "source_kind": "requirement",
+      "source_id": "REQ-001",
+      "target_kind": "specification",
+      "target_id": "SPEC-001",
+      "relation": "refines"
+    },
+    {
+      "source_kind": "specification",
+      "source_id": "SPEC-001",
+      "target_kind": "delivery_unit",
+      "target_id": "DU-001",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "requirement",
+      "source_id": "REQ-001",
+      "target_kind": "delivery_unit",
+      "target_id": "DU-001",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "delivery_unit",
+      "source_id": "DU-001",
+      "target_kind": "contour_task",
+      "target_id": "CT-FE-001",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "contour_task",
+      "source_id": "CT-FE-001",
+      "target_kind": "specification",
+      "target_id": "SPEC-001",
+      "relation": "depends_on"
+    },
+    {
+      "source_kind": "contour_task",
+      "source_id": "CT-FE-001",
+      "target_kind": "execution_task",
+      "target_id": "ET-FE-001-01",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "execution_task",
+      "source_id": "ET-FE-001-01",
+      "target_kind": "specification",
+      "target_id": "SPEC-001",
+      "relation": "implements"
+    },
+    {
+      "source_kind": "requirement",
+      "source_id": "REQ-002",
+      "target_kind": "specification",
+      "target_id": "SPEC-002",
+      "relation": "refines"
+    },
+    {
+      "source_kind": "specification",
+      "source_id": "SPEC-002",
+      "target_kind": "delivery_unit",
+      "target_id": "DU-002",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "requirement",
+      "source_id": "REQ-002",
+      "target_kind": "delivery_unit",
+      "target_id": "DU-002",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "delivery_unit",
+      "source_id": "DU-002",
+      "target_kind": "contour_task",
+      "target_id": "CT-DO-001",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "contour_task",
+      "source_id": "CT-DO-001",
+      "target_kind": "specification",
+      "target_id": "SPEC-002",
+      "relation": "depends_on"
+    },
+    {
+      "source_kind": "contour_task",
+      "source_id": "CT-DO-001",
+      "target_kind": "execution_task",
+      "target_id": "ET-DO-001-01",
+      "relation": "decomposes_into"
+    },
+    {
+      "source_kind": "execution_task",
+      "source_id": "ET-DO-001-01",
+      "target_kind": "specification",
+      "target_id": "SPEC-002",
+      "relation": "implements"
+    }
+  ]
+}

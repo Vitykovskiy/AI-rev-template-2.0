@@ -8,6 +8,16 @@ Developers must not reconstruct the required context manually from the full docu
 
 The necessity of a separate architecture decision is governed by delivery-unit metadata, not by an inferred absence or presence of typed links alone.
 
+## Typed Link Contract
+
+Each link must declare:
+
+- source artifact id;
+- target artifact id;
+- relation type;
+- rationale when the relation is not obvious from the artifact names alone;
+- status, if the relation is provisional.
+
 ## Allowed Typed Links
 
 - `requirement -> requirement`: `supersedes`
@@ -42,6 +52,20 @@ The necessity of a separate architecture decision is governed by delivery-unit m
 - `contour_task` must depend on at least one `specification` or `architecture_decision`
 - `execution_task` must have exactly one parent `contour_task`
 - `execution_task` must implement at least one `specification` or `architecture_decision`
+
+## Traceability Rules
+
+- every non-root artifact must be linked to its upstream source of truth;
+- every delivery unit must expose downstream decomposition links;
+- every execution task must preserve the chain back to the specification or architecture decision it implements;
+- every GitHub projection item must reference the canonical artifact ids it represents;
+- orphan links are a validation failure, not a warning.
+
+## Context Reconstruction Rule
+
+Task context is reconstructed from typed links and canonical ids, not from ad hoc repository search.
+
+Free-form search is allowed only to locate a known artifact whose canonical id is already known.
 
 Additional delivery-unit validity rules:
 

@@ -2,7 +2,7 @@
 
 ## Entity Types
 
-The template uses six entity types:
+The template uses six canonical entity types:
 
 - `requirement`
 - `specification`
@@ -24,7 +24,7 @@ The model separates:
 
 `delivery_unit` is a separate canonical artifact.
 
-It is not just a GitHub Issue.
+It is not just a GitHub issue.
 
 The canonical source of truth for `delivery_unit` lives in the repository.
 
@@ -64,7 +64,7 @@ The template uses stable identifiers with type prefixes and type-local sequentia
 
 Identifiers are stable keys only.
 
-Business meaning, release context, and version semantics must live in fields and typed links, not inside the identifier body.
+Business meaning, release context, ownership, and version semantics must live in fields and typed links, not inside the identifier body.
 
 ## Delivery Unit Control Metadata
 
@@ -94,3 +94,41 @@ Minimum required fields:
 - `deferred`
 
 The field exists to prevent agents from inferring architectural necessity from prose.
+
+## Canonical Artifact Rules
+
+- every artifact must have an owner defined in the ownership map;
+- every artifact must have at least one typed upstream link when it is non-root;
+- every artifact must be traceable to a delivery-unit boundary or a managed baseline;
+- no artifact may be used as both the source of truth and the operational projection of a different artifact family.
+
+## Canonical Storage Map
+
+| Entity | Canonical path | File naming rule |
+| --- | --- | --- |
+| `requirement` | `requirements/` | `REQ-XXX-<slug>.md` |
+| `specification` | `specifications/` | `SPEC-XXX-<slug>.md` |
+| `architecture_decision` | `architecture/` | `ADR-XXX-<slug>.md` |
+| `delivery_unit` | `delivery-units/` | `DU-XXX-<slug>.md` |
+| `contour_task` | `tasks/contour/` | `CT-<CONTOUR>-XXX-<slug>.md` |
+| `execution_task` | `tasks/execution/` | `ET-<CONTOUR>-XXX-YY-<slug>.md` |
+
+## Exact Canonical File Shape
+
+Each canonical file must contain:
+
+1. machine-checkable metadata conforming to `schemas/canonical-artifact-model.schema.json`;
+2. structured body sections from the corresponding template in `templates/`;
+3. explicit typed-link references to upstream and downstream entities;
+4. readiness and done criteria when the entity participates in implementation flow.
+
+## Minimal Completeness And Transition Rules
+
+| Entity | Minimal completeness | Ready for next stage when | Done when |
+| --- | --- | --- | --- |
+| `requirement` | problem, stakeholders, constraints, success criteria explicit | approved baseline exists | merged or superseded |
+| `specification` | functional, non-functional, interface, and state rules explicit | linked delivery units can be approved | approved and linked |
+| `architecture_decision` | context, decision, alternatives, consequences explicit | linked DUs satisfy architecture gate | approved or superseded |
+| `delivery_unit` | control metadata, scope, acceptance type, upstream refs explicit | package approved and decomposition complete | accepted and released when required |
+| `contour_task` | one parent DU, one contour, dependencies, readiness explicit | child execution tasks exist or `non_decomposable` is justified | all child work completed |
+| `execution_task` | one parent contour task, scope, dependencies, evidence explicit | PR can be opened | PR merged and evidence linked |
